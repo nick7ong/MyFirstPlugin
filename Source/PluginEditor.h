@@ -14,7 +14,8 @@
 //==============================================================================
 /**
 */
-class MyFirstPluginAudioProcessorEditor  : public juce::AudioProcessorEditor
+class MyFirstPluginAudioProcessorEditor  : public juce::AudioProcessorEditor, 
+                                           public juce::Slider::Listener
 {
 public:
     MyFirstPluginAudioProcessorEditor (MyFirstPluginAudioProcessor&);
@@ -24,8 +25,10 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
 
+    void sliderValueChanged(juce::Slider* slider) override;
+
 private:
-    juce::Slider slider;
+    juce::Slider gainSlider;
 
     MyFirstPluginAudioProcessor& audioProcessor;
 

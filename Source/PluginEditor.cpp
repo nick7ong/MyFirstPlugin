@@ -13,8 +13,14 @@
 MyFirstPluginAudioProcessorEditor::MyFirstPluginAudioProcessorEditor (MyFirstPluginAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
-    
-    setSize (200, 300);
+    setSize (400, 600);
+
+    gainSlider.setSliderStyle(juce::Slider::SliderStyle::LinearBarVertical);
+    gainSlider.setRange(-60.0f, 0.0f, 0.01f);
+    gainSlider.setValue(0.0f);
+    gainSlider.addListener(this); //pointing AudioProcessorEditorClass
+
+    addAndMakeVisible(&gainSlider);
 }
 
 MyFirstPluginAudioProcessorEditor::~MyFirstPluginAudioProcessorEditor()
@@ -24,16 +30,27 @@ MyFirstPluginAudioProcessorEditor::~MyFirstPluginAudioProcessorEditor()
 //==============================================================================
 void MyFirstPluginAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
+    // fill the whole window white
+    g.fillAll(juce::Colours::black);
 
-    g.setColour (juce::Colours::white);
-    g.setFont (15.0f);
-    g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
+    // set the current drawing colour to black
+    g.setColour(juce::Colours::white);
+
+    // set the font size and draw text to the screen
+    g.setFont(15.0f);
+
+    g.drawFittedText("Nick's Gain Slider", 0, 0, getWidth(), 30, juce::Justification::centred, 1);
+    g.drawFittedText("this does exactly what it says it does...", 0, 20, getWidth(), 30, juce::Justification::centred, 1);
+     
 }
 
 void MyFirstPluginAudioProcessorEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
+    gainSlider.setBounds(getWidth() / 2 - 50, getHeight() / 2 - 200, 100, 400);
+}
+
+void MyFirstPluginAudioProcessorEditor::sliderValueChanged(juce::Slider* slider) {
+    if (slider == &gainSlider) {
+        audioProcessor.gain = gainSlider.getValue();
+    }
 }
